@@ -110,6 +110,7 @@ class _ThermostatScreenState extends State<ThermostatScreen> {
                     turnOn: _turnOn,
                     modeIcon: Icon(
                       Icons.ac_unit,
+                      size: 32,
                       color: Color(0xFF3CAEF4),
                     ),
                     textStyle: new TextStyle(
@@ -119,6 +120,7 @@ class _ThermostatScreenState extends State<ThermostatScreen> {
                     minValue: 18,
                     maxValue: 38,
                     initialValue: 26,
+                    actualTemperature: 27.0,
                     onValueChanged: (value) {
                       print('Selected value : $value');
                     },

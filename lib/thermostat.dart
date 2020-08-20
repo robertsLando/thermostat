@@ -21,8 +21,9 @@ class Thermostat extends StatefulWidget {
   final Widget modeIcon;
   final int minValue;
   final int maxValue;
-  final int initialValue;
-  final ValueChanged<int> onValueChanged;
+  final double initialValue;
+  final double actualTemperature;
+  final ValueChanged<double> onValueChanged;
   final TextStyle textStyle;
 
   const Thermostat({
@@ -38,6 +39,7 @@ class Thermostat extends StatefulWidget {
     @required this.minValue,
     @required this.maxValue,
     @required this.initialValue,
+    @required this.actualTemperature,
     this.onValueChanged,
     this.textStyle,
   }) : super(key: key);
@@ -56,11 +58,14 @@ class _ThermostatState extends State<Thermostat>
   AnimationController _glowController;
 
   double _angle;
-  int _value;
+  double _value;
+  double _actualTemperature;
 
   @override
   void initState() {
     _value = widget.initialValue;
+    _actualTemperature = widget.actualTemperature;
+
     if (widget.initialValue == widget.minValue) {
       _angle = MAX_RING_RAD;
     } else if (widget.initialValue == widget.maxValue) {
@@ -102,8 +107,8 @@ class _ThermostatState extends State<Thermostat>
         child: new Stack(
           children: <Widget>[
             new Positioned(
-              top: halfWidth - 16.0,
-              left: halfWidth - 62.0,
+              top: halfWidth + 30,
+              left: halfWidth - 15.0,
               width: 32.0,
               height: 32.0,
               child: widget.modeIcon,
@@ -129,10 +134,19 @@ class _ThermostatState extends State<Thermostat>
                     : null,
               ),
             ),
+            new Positioned(
+              top: halfWidth - 50,
+              right: halfWidth - 22,
+              child: Text(
+                '${_actualTemperature.toStringAsFixed(1)}',
+                style: TextStyle(color: Colors.white, fontSize: 22),
+              ),
+            ),
             new Center(
               child: new Text(
                 '$_value',
-                style: widget.textStyle ?? Theme.of(context).textTheme.headline4,
+                style:
+                    widget.textStyle ?? Theme.of(context).textTheme.headline4,
               ),
             ),
             new CustomPaint(
@@ -186,7 +200,7 @@ class _ThermostatState extends State<Thermostat>
         final value = ((widget.maxValue - widget.minValue) * normalizedValue) +
             widget.minValue;
 
-        final val = value.round();
+        final val = double.tryParse(value.toStringAsFixed(1));
         if (val != _value) {
           _value = val;
         }
