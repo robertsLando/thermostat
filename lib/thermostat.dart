@@ -55,6 +55,8 @@ class _ThermostatState extends State<Thermostat>
   static const double MAX_RING_RAD = 4.895;
   static const double DEG_90_TO_RAD = 1.5708;
 
+  static const double VAL_OFFSET = 0.03;
+
   AnimationController _glowController;
 
   double _angle;
@@ -194,13 +196,17 @@ class _ThermostatState extends State<Thermostat>
     if (clampedAngle != _angle) {
       setState(() {
         _angle = clampedAngle;
-        final normalizedValue =
+        double normalizedValue =
             (normalizeBetweenZeroAndTwoPi(clampedAngle + DEG_90_TO_RAD) /
                 TO_RADIANS);
+        
+        normalizedValue = normalizedValue - VAL_OFFSET < 0 ? 0 : normalizedValue;
+        normalizedValue = normalizedValue + VAL_OFFSET > 1 ? 1 : normalizedValue;
+
         final value = ((widget.maxValue - widget.minValue) * normalizedValue) +
             widget.minValue;
 
-        final val = double.tryParse(value.toStringAsFixed(1));
+        final val = double.tryParse((value - value % 0.5).toStringAsFixed(1));
         if (val != _value) {
           _value = val;
         }

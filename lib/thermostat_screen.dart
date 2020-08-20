@@ -117,8 +117,8 @@ class _ThermostatScreenState extends State<ThermostatScreen> {
                       color: textColor,
                       fontSize: 34.0,
                     ),
-                    minValue: 18,
-                    maxValue: 38,
+                    minValue: 15,
+                    maxValue: 30,
                     initialValue: 26,
                     actualTemperature: 27.0,
                     onValueChanged: (value) {
